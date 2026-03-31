@@ -479,16 +479,19 @@ Podrobný rozpad repozitáře je v samostatném dokumentu:
 - **Batch inference:** llama.cpp + GGUF [R18][R19][R20][R21]
 - **Browser automation:** Playwright [Z3]
 
-### 7.3 Startovní modely
+### 7.3 Doporučené produkční modely
 
-Tato část ve zdrojovém PDF chybí a doplňuje se jako praktický baseline:
+Pro tento projekt se nevolí „startovní modely“, ale cílová produkční modelová sada odpovídající architektuře online + batch, českému provozu, screenshot/document workloadu a hybridnímu retrievalu.
 
-- **Embedding:** `BAAI/bge-m3`
-- **VLM / screenshot extraction:** `Qwen2.5-VL-7B`
-- **Online RAG LLM:** `Llama 3.1 8B Instruct` nebo `Qwen2.5 14B`
-- **OCR fallback:** `Tesseract` pouze jako nouzová CPU cesta
+- **Embedding / retriever:** `BAAI/bge-m3`
+- **Reranker:** `BAAI/bge-reranker-v2.5-gemma2-lightweight`
+- **Primární OCR / document parser:** `PaddleOCR / PP-StructureV3`
+- **VLM pro složité screenshoty a vizuálně bohaté stránky:** `Qwen/Qwen2.5-VL-32B-Instruct`
+- **Online RAG LLM:** `Qwen/Qwen3-14B`
+- **Batch / slow-path / analytická generace:** `Qwen/Qwen3-32B`
+- **Nouzový CPU fallback:** `Tesseract 5` (`ces`) pouze jako poslední fallback
 
-Finální modelová volba musí projít benchmarkem na češtině, reálných datech, retrieval kvalitě, end-to-end latenci a nákladech batch vs online inference. [Z1][Z4][Z5]
+Tato volba odpovídá architektuře oddělené online a batch vrstvy, hybridnímu retrievalu a požadavku na auditovatelný multimodální ingest. Přesto musí projít interním acceptance benchmarkem na češtině, retrieval kvalitě, citation fidelity, screenshot/document parsing quality, p50/p95 latenci a nákladech online vs batch inference.
 
 ---
 
